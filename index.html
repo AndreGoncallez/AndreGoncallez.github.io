@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PrimeOps | Andre Goncallez — Infrastructure • Cloud & Security (in progress) • Observability</title>
+  <title>PrimeOps | Andre Goncallez — Cloud • Security • Observability</title>
   <link rel="icon" href="https://public-frontend-cos.metadl.com/mgx/img/favicon_atoms.ico" type="image/x-icon">
 
   <script src="https://cdn.tailwindcss.com"></script>
@@ -40,6 +40,14 @@
     }
 
     .mono { font-family: 'Fira Code', monospace; }
+
+    .heading-standard {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: -0.025em;
+      color: #ffffff;
+    }
 
     h1, h2, h3 {
       font-family: 'Inter', system-ui, sans-serif;
@@ -79,9 +87,18 @@
       box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.05);
     }
 
-    .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
 
-    .accent-bar { height: 3px; width: 40px; border-radius: 4px; }
+    .accent-bar {
+      height: 3px;
+      width: 40px;
+      border-radius: 4px;
+    }
     .accent-bar--green  { background: var(--green); }
     .accent-bar--blue   { background: var(--blue); }
     .accent-bar--amber  { background: var(--amber); }
@@ -115,7 +132,10 @@
       cursor: pointer;
       transition: border-color var(--transition-base), transform var(--transition-base);
     }
-    .media-thumb:hover { border-color: rgba(34, 197, 94, 0.45); transform: translateY(-2px); }
+    .media-thumb:hover {
+      border-color: rgba(34, 197, 94, 0.45);
+      transform: translateY(-2px);
+    }
     .media-thumb img { display: block; width: 100%; height: auto; }
 
     .modal-backdrop {
@@ -129,7 +149,10 @@
       padding: 16px;
       z-index: 50;
     }
-    .modal-backdrop[data-open="true"] { display: flex; animation: fadeIn 200ms ease; }
+    .modal-backdrop[data-open="true"] {
+      display: flex;
+      animation: fadeIn 200ms ease;
+    }
 
     .modal-panel {
       width: min(920px, 100%);
@@ -159,7 +182,10 @@
       cursor: pointer;
       transition: border-color var(--transition-fast), color var(--transition-fast);
     }
-    .modal-close:hover { border-color: rgba(34, 197, 94, 0.6); color: #fff; }
+    .modal-close:hover {
+      border-color: rgba(34, 197, 94, 0.6);
+      color: #fff;
+    }
 
     .kbd {
       border: 1px solid rgba(39, 39, 42, 0.9);
@@ -171,10 +197,21 @@
     }
 
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(16px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
-    .animate-in { animation: fadeInUp 400ms ease forwards; opacity: 0; }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(16px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-in {
+      animation: fadeInUp 400ms ease forwards;
+      opacity: 0;
+    }
     .animate-in:nth-child(1) { animation-delay: 50ms; }
     .animate-in:nth-child(2) { animation-delay: 100ms; }
     .animate-in:nth-child(3) { animation-delay: 150ms; }
@@ -193,7 +230,11 @@
       letter-spacing: 0.02em;
     }
 
-    .section-divider { border-top: 1px solid var(--stroke); margin-top: 16px; padding-top: 16px; }
+    .section-divider {
+      border-top: 1px solid var(--stroke);
+      margin-top: 16px;
+      padding-top: 16px;
+    }
 
     .info-cell {
       background: rgba(0, 0, 0, 0.2);
@@ -208,7 +249,10 @@
       text-transform: uppercase;
       margin-bottom: 4px;
     }
-    .info-cell .info-value { font-size: 12px; color: var(--text); }
+    .info-cell .info-value {
+      font-size: 12px;
+      color: var(--text);
+    }
 
     .status-tag {
       font-family: 'Fira Code', monospace;
@@ -225,11 +269,29 @@
       transition: color var(--transition-fast);
     }
     .view-link:hover { color: #fff; }
+
+    /* micro CTA in hiring cards */
+    .micro-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(39, 39, 42, 0.8);
+    }
+    .micro-cta .micro-text {
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      color: #a1a1aa;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
   </style>
 </head>
 
 <body class="h-screen flex flex-col overflow-hidden">
 
+  <!-- TOP BAR -->
   <header class="border-b border-zinc-800 bg-[var(--panel)] px-6 py-3 flex justify-between items-center">
     <div class="flex gap-4 items-center mono text-[10px] tracking-tight text-zinc-500">
       <span class="flex items-center gap-2">
@@ -244,11 +306,13 @@
 
   <main class="flex-1 grid grid-cols-12 overflow-hidden">
 
+    <!-- SIDEBAR -->
     <aside class="col-span-12 md:col-span-4 xl:col-span-3 border-r border-zinc-800 p-6 bg-[var(--panel)] overflow-y-auto">
 
+      <!-- Identity -->
       <div class="mb-7">
         <h1 class="text-2xl tracking-tight">Andre_Goncallez</h1>
-        <p class="text-[11px] text-green-500 mono mt-1">Infrastructure Analyst | Cloud & Security (in progress) • Observability</p>
+        <p class="text-[11px] text-green-500 mono mt-1">@PRIMEOPS.TECH // INFRA → CLOUD • OBS • DEVSECOPS</p>
 
         <div class="mt-4 grid grid-cols-2 gap-2">
           <a class="btn rounded-lg px-3 py-2 text-[11px] mono text-zinc-300 hover:text-white flex items-center justify-between"
@@ -266,6 +330,7 @@
         </div>
       </div>
 
+      <!-- Fast summary -->
       <div class="terminal-card rounded-xl p-4 mb-6">
         <h2 class="text-[11px] mb-3 border-b border-zinc-800 pb-2">Recruiter_Quick_Read</h2>
         <ul class="text-[12px] text-zinc-300 space-y-2">
@@ -276,6 +341,7 @@
         </ul>
       </div>
 
+      <!-- Tech stack chips -->
       <div class="mb-6">
         <div class="mono-label mb-2">Tech_Stack</div>
         <div class="flex flex-wrap gap-2">
@@ -292,6 +358,7 @@
         </div>
       </div>
 
+      <!-- PRIMEOPS Manifest -->
       <div class="terminal-card rounded-xl p-4 mb-6">
         <h2 class="text-[11px] mb-3 border-b border-zinc-800 pb-2">PrimeOps_Manifest</h2>
         <pre class="text-[11px] leading-relaxed mono text-zinc-300 whitespace-pre-wrap">signature: "Pensar antes de agir. Entender antes de mudar. Documentar para evoluir."
@@ -305,6 +372,7 @@ method: PrimeOps
   PS: Standardize/Systemize (documentação + escala)</pre>
       </div>
 
+      <!-- Study track -->
       <div class="terminal-card rounded-xl p-4">
         <h2 class="text-[11px] mb-3 border-b border-zinc-800 pb-2">Certs_And_Roadmap</h2>
         <ul class="text-[12px] text-zinc-300 space-y-2">
@@ -317,22 +385,23 @@ method: PrimeOps
 
     </aside>
 
+    <!-- CONTENT -->
     <section class="col-span-12 md:col-span-8 xl:col-span-9 p-8 overflow-y-auto">
 
+      <!-- HERO -->
       <div class="mb-10 animate-in">
         <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
           <div>
-            <h2 class="text-4xl tracking-tight">Infrastructure • Cloud & Security (in progress) • Observability</h2>
+            <h2 class="text-4xl tracking-tight">Cloud • Security • Observability</h2>
             <p class="text-zinc-400 max-w-3xl mt-2">
-              Infrastructure Analyst com base forte em redes e operação.
-              Em transição para <span class="text-white font-semibold">Cloud/Observability</span> e <span class="text-white font-semibold">Security Ops</span> (in progress),
-              com foco em automação, runbooks e documentação.
+              Perfil de transição de Infra para Cloud/Security, com foco em <span class="text-white font-semibold">operações, troubleshooting e confiabilidade</span>.
+              Entrega prática via labs, automações, runbooks e documentação viva.
             </p>
           </div>
 
           <div class="flex gap-2 shrink-0">
-            <button type="button" id="btnViewProjects" class="btn rounded-xl px-4 py-3 text-[11px] mono text-zinc-200 hover:text-white uppercase">View_Projects</button>
-            <button type="button" id="btnHiringFit" class="btn rounded-xl px-4 py-3 text-[11px] mono text-zinc-200 hover:text-white uppercase">Hiring_Fit</button>
+            <a href="#projects" class="btn rounded-xl px-4 py-3 text-[11px] mono text-zinc-200 hover:text-white uppercase">View_Projects</a>
+            <a href="#hiring" class="btn rounded-xl px-4 py-3 text-[11px] mono text-zinc-200 hover:text-white uppercase">Hiring_Fit</a>
           </div>
         </div>
 
@@ -341,11 +410,12 @@ method: PrimeOps
           <span class="chip px-2 py-1 rounded">Entry: Observability / NOC+</span>
           <span class="chip px-2 py-1 rounded">Path: DevSecOps</span>
           <span class="chip px-2 py-1 rounded">Path: Cloud Security</span>
-          <span class="chip px-2 py-1 rounded text-green-300 !border-green-500/30">Differential: PrimeOps (in development)</span>
-          <span class="chip px-2 py-1 rounded text-blue-300 !border-blue-500/30">Layer: HootAI (in development)</span>
+          <span class="chip px-2 py-1 rounded text-green-300 !border-green-500/30">Differential: PrimeOps</span>
+          <span class="chip px-2 py-1 rounded text-blue-300 !border-blue-500/30">Layer: HootAI</span>
         </div>
       </div>
 
+      <!-- WHERE I FIT -->
       <div id="hiring" class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-10">
         <div class="terminal-card rounded-xl p-5 animate-in">
           <div class="accent-bar accent-bar--green mb-4"></div>
@@ -356,6 +426,24 @@ method: PrimeOps
             <li>• infra fundamentals</li>
             <li>• documentação e padronização</li>
           </ul>
+
+          <!-- Micro CTA mapping -->
+          <div class="micro-cta">
+            <span class="micro-text">→ related proof</span>
+            <a class="view-link text-zinc-400"
+               href="#projects"
+               data-scroll-project="PRM-DC-000"
+               aria-label="Go to Datacenter lab project">
+              VIEW_DATACENTER
+            </a>
+            <span class="text-zinc-600 mono text-[10px]">/</span>
+            <a class="view-link text-zinc-400"
+               href="#projects"
+               data-scroll-project="PRM-NET-003"
+               aria-label="Go to Network labs project">
+              VIEW_NETWORK_LABS
+            </a>
+          </div>
         </div>
 
         <div class="terminal-card rounded-xl p-5 animate-in">
@@ -367,6 +455,17 @@ method: PrimeOps
             <li>• SLO-lite & pain points</li>
             <li>• playbooks de resposta</li>
           </ul>
+
+          <!-- Micro CTA mapping -->
+          <div class="micro-cta">
+            <span class="micro-text">→ related proof</span>
+            <a class="view-link text-zinc-400"
+               href="#projects"
+               data-scroll-project="PRM-OBS-001"
+               aria-label="Go to Observability blueprint project">
+              VIEW_OBS_BLUEPRINT
+            </a>
+          </div>
         </div>
 
         <div class="terminal-card rounded-xl p-5 animate-in">
@@ -378,9 +477,28 @@ method: PrimeOps
             <li>• policy & guardrails</li>
             <li>• automação operacional</li>
           </ul>
+
+          <!-- Micro CTA mapping -->
+          <div class="micro-cta">
+            <span class="micro-text">→ related proof</span>
+            <a class="view-link text-zinc-400"
+               href="#projects"
+               data-scroll-project="PRM-DSO-005"
+               aria-label="Go to DevSecOps labs project">
+              VIEW_DEVSECOPS_LABS
+            </a>
+            <span class="text-zinc-600 mono text-[10px]">/</span>
+            <a class="view-link text-zinc-400"
+               href="#projects"
+               data-scroll-project="PRM-SEC-004"
+               aria-label="Go to Cloud security labs project">
+              VIEW_CLOUD_SECURITY
+            </a>
+          </div>
         </div>
       </div>
 
+      <!-- PROJECTS -->
       <div id="projects" class="mb-10">
         <div class="flex items-center justify-between mb-4">
           <h2 class="text-2xl">Projects</h2>
@@ -389,7 +507,40 @@ method: PrimeOps
 
         <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
 
-          <article class="terminal-card p-6 rounded-xl animate-in">
+          <!-- Project 0: Datacenter -->
+          <article id="project-PRM-DC-000" class="terminal-card p-6 rounded-xl animate-in" data-project-id="PRM-DC-000">
+            <div class="flex justify-between items-start">
+              <div class="accent-bar accent-bar--green"></div>
+              <span class="mono-label">ID: PRM-DC-000</span>
+            </div>
+            <h3 class="text-base mt-3">PrimeOps Datacenter: Hybrid Lab (Proxmox • pfSense • AD)</h3>
+            <p class="text-sm text-zinc-400 mt-2">
+              Ambiente híbrido para simular cenários reais: segmentação, serviços base e validação operacional.
+            </p>
+
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div class="info-cell">
+                <div class="info-label">Focus</div>
+                <div class="info-value">infra fundamentals + troubleshooting</div>
+              </div>
+              <div class="info-cell">
+                <div class="info-label">Artifacts</div>
+                <div class="info-value">docs + diagrams + runbooks</div>
+              </div>
+              <div class="info-cell">
+                <div class="info-label">Status</div>
+                <div class="info-value">progressive build (lab)</div>
+              </div>
+            </div>
+
+            <div class="section-divider flex justify-between items-center">
+              <span class="status-tag text-green-300">STATUS: ACTIVE_BUILD</span>
+              <a href="https://github.com/AndreGoncallez/PrimeOps-Datacenter" target="_blank" rel="noreferrer" class="view-link text-zinc-400">VIEW_REPO</a>
+            </div>
+          </article>
+
+          <!-- Project A -->
+          <article id="project-PRM-OBS-001" class="terminal-card p-6 rounded-xl animate-in" data-project-id="PRM-OBS-001">
             <div class="flex justify-between items-start">
               <div class="accent-bar accent-bar--amber"></div>
               <span class="mono-label">ID: PRM-OBS-001</span>
@@ -416,11 +567,18 @@ method: PrimeOps
 
             <div class="section-divider flex justify-between items-center">
               <span class="status-tag text-amber-300">STATUS: READY_TO_PUBLISH</span>
-              <a href="https://github.com/AndreGoncallez" target="_blank" rel="noreferrer" class="view-link text-zinc-400">VIEW_REPO</a>
+              <a href="#"
+                 class="view-link text-zinc-500"
+                 title="Link será conectado ao repo dedicado quando publicado"
+                 aria-label="Repo link will be added when published"
+                 onclick="return false;">
+                VIEW_REPO (SOON)
+              </a>
             </div>
           </article>
 
-          <article class="terminal-card p-6 rounded-xl animate-in">
+          <!-- Project B -->
+          <article id="project-PRM-AUT-002" class="terminal-card p-6 rounded-xl animate-in" data-project-id="PRM-AUT-002">
             <div class="flex justify-between items-start">
               <div class="accent-bar accent-bar--green"></div>
               <span class="mono-label">ID: PRM-AUT-002</span>
@@ -447,11 +605,18 @@ method: PrimeOps
 
             <div class="section-divider flex justify-between items-center">
               <span class="status-tag text-green-300">STATUS: ACTIVE_BUILD</span>
-              <a href="https://github.com/AndreGoncallez" target="_blank" rel="noreferrer" class="view-link text-zinc-400">VIEW_DOCS</a>
+              <a href="#"
+                 class="view-link text-zinc-500"
+                 title="Link será conectado ao repo dedicado quando publicado"
+                 aria-label="Docs link will be added when published"
+                 onclick="return false;">
+                VIEW_DOCS (SOON)
+              </a>
             </div>
           </article>
 
-          <article class="terminal-card p-6 rounded-xl animate-in">
+          <!-- Project C -->
+          <article id="project-PRM-NET-003" class="terminal-card p-6 rounded-xl animate-in" data-project-id="PRM-NET-003">
             <div class="flex justify-between items-start">
               <div class="accent-bar accent-bar--blue"></div>
               <span class="mono-label">ID: PRM-NET-003</span>
@@ -478,44 +643,88 @@ method: PrimeOps
 
             <div class="section-divider flex justify-between items-center">
               <span class="status-tag text-blue-300">STATUS: SEEDING</span>
-              <a href="https://github.com/AndreGoncallez/Network-Support-Projects-LAN-Switches-NOC" target="_blank" rel="noreferrer" class="view-link text-zinc-400">VIEW_REPO</a>
+              <a href="https://github.com/AndreGoncallez/Network-Support-Projects-LAN-Switches-NOC"
+                 target="_blank" rel="noreferrer"
+                 class="view-link text-zinc-400">VIEW_REPO</a>
             </div>
           </article>
 
-          <article class="terminal-card p-6 rounded-xl animate-in">
+          <!-- Project D -->
+          <article id="project-PRM-SEC-004" class="terminal-card p-6 rounded-xl animate-in" data-project-id="PRM-SEC-004">
             <div class="flex justify-between items-start">
               <div class="accent-bar accent-bar--purple"></div>
-              <span class="mono-label">ID: PRM-DC-004</span>
+              <span class="mono-label">ID: PRM-SEC-004</span>
             </div>
-            <h3 class="text-base mt-3">PrimeOps Datacenter: Hybrid Cloud Lab</h3>
+            <h3 class="text-base mt-3">Cloud Security Labs: IAM • Logging • Guardrails</h3>
             <p class="text-sm text-zinc-400 mt-2">
-              Ambiente de laboratório para simular infraestrutura real: VLANs, firewall, identidade e observabilidade (evolutivo).
+              Trilha prática de segurança em nuvem: identidade, auditoria, hardening e controles repetíveis.
             </p>
 
             <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
               <div class="info-cell">
                 <div class="info-label">Scope</div>
-                <div class="info-value">Proxmox • pfSense • Windows AD • Linux</div>
+                <div class="info-value">GCP/AWS fundamentals + segurança</div>
               </div>
               <div class="info-cell">
                 <div class="info-label">Method</div>
                 <div class="info-value">PrimeOps aplicado em labs</div>
               </div>
               <div class="info-cell">
-                <div class="info-label">Status</div>
-                <div class="info-value">running + iterating</div>
+                <div class="info-label">Proof</div>
+                <div class="info-value">docs + scripts + checklist</div>
               </div>
             </div>
 
             <div class="section-divider flex justify-between items-center">
-              <span class="status-tag text-purple-300">STATUS: ACTIVE</span>
-              <a href="https://github.com/AndreGoncallez/PrimeOps-Datacenter" target="_blank" rel="noreferrer" class="view-link text-zinc-400">VIEW_REPO</a>
+              <span class="status-tag text-purple-300">STATUS: ROADMAP_LOCKED</span>
+              <a href="#"
+                 class="view-link text-zinc-500"
+                 title="Link será conectado ao repo dedicado quando publicado"
+                 aria-label="Plan link will be added when published"
+                 onclick="return false;">
+                VIEW_PLAN (SOON)
+              </a>
+            </div>
+          </article>
+
+          <!-- Project E: DevSecOps Labs -->
+          <article id="project-PRM-DSO-005" class="terminal-card p-6 rounded-xl animate-in" data-project-id="PRM-DSO-005">
+            <div class="flex justify-between items-start">
+              <div class="accent-bar accent-bar--purple"></div>
+              <span class="mono-label">ID: PRM-DSO-005</span>
+            </div>
+            <h3 class="text-base mt-3">DevSecOps Labs: CI/CD Experiments (GitHub Actions)</h3>
+            <p class="text-sm text-zinc-400 mt-2">
+              Pipelines básicos e experimentos com validações e conceitos de segurança integrados no fluxo de entrega.
+            </p>
+
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div class="info-cell">
+                <div class="info-label">Focus</div>
+                <div class="info-value">CI/CD fundamentals + security concepts</div>
+              </div>
+              <div class="info-cell">
+                <div class="info-label">Artifacts</div>
+                <div class="info-value">pipelines + docs + checks</div>
+              </div>
+              <div class="info-cell">
+                <div class="info-label">Outcome</div>
+                <div class="info-value">understanding security in delivery</div>
+              </div>
+            </div>
+
+            <div class="section-divider flex justify-between items-center">
+              <span class="status-tag text-purple-300">STATUS: ACTIVE_LEARNING</span>
+              <a href="https://github.com/AndreGoncallez/DevSecOps-Labs-CI-CD-Automation-Security-Scans"
+                 target="_blank" rel="noreferrer"
+                 class="view-link text-zinc-400">VIEW_REPO</a>
             </div>
           </article>
 
         </div>
       </div>
 
+      <!-- PRIMEOPS + HOOTAI AUTHORITY -->
       <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-10">
 
         <div class="terminal-card rounded-xl p-6">
@@ -525,30 +734,42 @@ method: PrimeOps
           </p>
 
           <div class="mt-4 grid grid-cols-2 gap-2 text-[12px] text-zinc-300">
-            <button class="primeops-btn" data-primeops-open="P" aria-haspopup="dialog" type="button"><span class="mono text-zinc-500 text-[10px]">P</span> PURPOSE</button>
-            <button class="primeops-btn" data-primeops-open="R" aria-haspopup="dialog" type="button"><span class="mono text-zinc-500 text-[10px]">R</span> RULES</button>
-            <button class="primeops-btn" data-primeops-open="I" aria-haspopup="dialog" type="button"><span class="mono text-zinc-500 text-[10px]">I</span> IMPACTS</button>
-            <button class="primeops-btn" data-primeops-open="M" aria-haspopup="dialog" type="button"><span class="mono text-zinc-500 text-[10px]">M</span> MAP</button>
-            <button class="primeops-btn" data-primeops-open="E" aria-haspopup="dialog" type="button"><span class="mono text-zinc-500 text-[10px]">E</span> EXECUTION</button>
-            <button class="primeops-btn" data-primeops-open="O" aria-haspopup="dialog" type="button"><span class="mono text-zinc-500 text-[10px]">O</span> OBSERVABILITY</button>
+            <button class="primeops-btn" data-primeops-open="P" aria-haspopup="dialog" type="button">
+              <span class="mono text-zinc-500 text-[10px]">P</span> PURPOSE
+            </button>
+            <button class="primeops-btn" data-primeops-open="R" aria-haspopup="dialog" type="button">
+              <span class="mono text-zinc-500 text-[10px]">R</span> RULES
+            </button>
+            <button class="primeops-btn" data-primeops-open="I" aria-haspopup="dialog" type="button">
+              <span class="mono text-zinc-500 text-[10px]">I</span> IMPACTS
+            </button>
+            <button class="primeops-btn" data-primeops-open="M" aria-haspopup="dialog" type="button">
+              <span class="mono text-zinc-500 text-[10px]">M</span> MAP
+            </button>
+            <button class="primeops-btn" data-primeops-open="E" aria-haspopup="dialog" type="button">
+              <span class="mono text-zinc-500 text-[10px]">E</span> EXECUTION
+            </button>
+            <button class="primeops-btn" data-primeops-open="O" aria-haspopup="dialog" type="button">
+              <span class="mono text-zinc-500 text-[10px]">O</span> OBSERVABILITY
+            </button>
           </div>
 
           <div class="section-divider flex justify-between items-center">
             <span class="status-tag text-green-300">DIFFERENTIAL: SYSTEM_THINKING + EXECUTION</span>
-            <a href="#" data-primeops-open="P" class="view-link text-zinc-400">VIEW_METHOD</a>
+            <a href="#" id="viewMethodBtn" data-primeops-open="P" class="view-link text-zinc-400">VIEW_METHOD</a>
           </div>
         </div>
 
         <div class="terminal-card rounded-xl p-6">
           <h3 class="text-xl">HootAI Layer</h3>
           <p class="text-sm text-zinc-400 mt-2">
-            HootAI é uma camada assistida para operação e aprendizado (em desenvolvimento): runbooks, troubleshooting guiado e padronização.
+            HootAI é a camada assistida para operação e aprendizado: runbooks, troubleshooting guiado e padronização de atendimento.
           </p>
 
           <div class="mt-4 space-y-2 text-[12px] text-zinc-300">
             <div class="info-cell">
               <div class="info-label">Use Cases</div>
-              <div class="info-value">Runbooks • triage • aprendizado • templates de incidentes</div>
+              <div class="info-value">Runbooks • triage • aprendizado acelerado • templates de incidentes</div>
             </div>
             <div class="info-cell">
               <div class="info-label">Positioning</div>
@@ -558,12 +779,13 @@ method: PrimeOps
 
           <div class="section-divider flex justify-between items-center">
             <span class="status-tag text-blue-300">LAYER: OPS_ACCELERATION</span>
-            <a href="https://github.com/AndreGoncallez" target="_blank" rel="noreferrer" class="view-link text-zinc-400">VIEW_DEMO</a>
+            <a href="#" class="view-link text-zinc-500" onclick="return false;" title="Demo será publicado quando estiver disponível">VIEW_DEMO (SOON)</a>
           </div>
         </div>
 
       </div>
 
+      <!-- BOOK / AUTHORITY -->
       <div class="terminal-card rounded-xl p-6 mb-10">
         <div class="flex justify-between items-start">
           <div class="accent-bar accent-bar--green"></div>
@@ -572,7 +794,7 @@ method: PrimeOps
         <h3 class="text-xl mt-3">Book / Publications</h3>
         <p class="text-sm text-zinc-400 mt-2 max-w-4xl">
           Livro em desenvolvimento com foco em maturidade operacional, tomada de decisão e execução padronizada.
-          Apoiado por projetos e artefatos públicos.
+          Posiciona o PrimeOps como ponte entre estratégia e operação (sem perder o pé no chão: casos, checklists e runbooks).
         </p>
         <div class="mt-4 flex flex-wrap gap-2">
           <span class="chip px-2 py-1 rounded">operational maturity</span>
@@ -581,10 +803,11 @@ method: PrimeOps
         </div>
         <div class="section-divider flex justify-between items-center">
           <span class="mono text-[10px] text-zinc-400">NOTE: AUTORIDADE APOIADA POR PROJETOS E ARTEFATOS PÚBLICOS</span>
-          <a href="https://github.com/AndreGoncallez" target="_blank" rel="noreferrer" class="view-link text-zinc-400">READ_PREVIEW</a>
+          <a href="#" class="view-link text-zinc-500" onclick="return false;" title="Preview será publicado quando disponível">READ_PREVIEW (SOON)</a>
         </div>
       </div>
 
+      <!-- PRIMEOPS PDFs -->
       <div class="terminal-card rounded-xl p-6 mb-10">
         <div class="flex justify-between items-start">
           <div class="accent-bar accent-bar--blue"></div>
@@ -593,7 +816,8 @@ method: PrimeOps
 
         <h3 class="text-xl mt-3">PrimeOps — Automation & Monitoring (PDFs)</h3>
         <p class="text-sm text-zinc-400 mt-2 max-w-4xl">
-          Materiais de apoio (decks) para apresentar a PrimeOps como empresa de automação e monitoramento.
+          Materiais de apoio (decks) para apresentar a PrimeOps como empresa de automação e monitoramento:
+          foco em confiabilidade, prevenção de falhas, visibilidade gerencial e inteligência operacional.
         </p>
 
         <div class="mt-5 grid grid-cols-1 lg:grid-cols-2 gap-3">
@@ -617,11 +841,12 @@ method: PrimeOps
         </div>
 
         <div class="section-divider flex justify-between items-center">
-          <span class="mono text-[10px] text-zinc-400">TIP: MANTENHA PDFS EM /assets COM ESSES NOMES</span>
+          <span class="mono text-[10px] text-zinc-400">TIP: AO PUBLICAR, COLOQUE OS PDFS EM /ASSETS E MANTENHA OS NOMES</span>
           <span class="status-tag text-blue-300">OUTPUT: CLIENT_READY</span>
         </div>
       </div>
 
+      <!-- MEDIA KIT -->
       <div class="terminal-card rounded-xl p-6 mb-10">
         <div class="flex justify-between items-start">
           <div class="accent-bar accent-bar--purple"></div>
@@ -629,7 +854,7 @@ method: PrimeOps
         </div>
         <h3 class="text-xl mt-3">Media Kit (Images)</h3>
         <p class="text-sm text-zinc-400 mt-2 max-w-4xl">
-          Assets visuais: RootAI, infográfico PrimeOps e capa do livro.
+          Assets visuais para reforçar autoridade: RootAI (by PrimeOps), infográfico do método e capa do livro.
         </p>
 
         <div class="mt-5 grid grid-cols-1 lg:grid-cols-3 gap-3">
@@ -645,15 +870,16 @@ method: PrimeOps
         </div>
 
         <div class="section-divider flex justify-between items-center">
-          <span class="mono text-[10px] text-zinc-400">NOTE: MANTENHA IMAGENS EM /assets</span>
+          <span class="mono text-[10px] text-zinc-400">NOTE: MANTENHA IMAGENS EM /ASSETS PARA FUNCIONAR EM PRODUÇÃO</span>
           <span class="status-tag text-purple-300">STATUS: PRESS_READY</span>
         </div>
       </div>
 
+      <!-- BOTTOM CTA -->
       <div class="terminal-card rounded-xl p-6">
         <h3 class="text-xl">Contact / Collaboration</h3>
         <p class="text-sm text-zinc-400 mt-2">
-          Disponível para posições de entrada/transição em Cloud/Observability, com trilha clara para DevSecOps e Cloud Security.
+          Disponível para posições de entrada e transição em Cloud/Observability, com trilha clara para DevSecOps e Cloud Security.
         </p>
 
         <div class="mt-4 flex flex-wrap gap-2">
@@ -680,13 +906,15 @@ method: PrimeOps
 
   </main>
 
-  <!-- PRIMEOPS MODAL -->
+  <!-- MODAL: PRIMEOPS METHOD -->
   <div id="primeopsModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="primeopsModalTitle" aria-describedby="primeopsModalDesc" data-open="false">
     <div class="modal-panel">
       <div class="modal-header">
         <div>
           <div id="primeopsModalTitle" class="text-white font-bold mono text-[12px] tracking-tight uppercase">PrimeOps_Method // Detail_View</div>
-          <div class="text-[10px] mono text-zinc-500 mt-0.5">Press <span class="kbd">Esc</span> to close</div>
+          <div class="text-[10px] mono text-zinc-500 mt-0.5">
+            Press <span class="kbd">Esc</span> to close
+          </div>
         </div>
         <button id="primeopsModalClose" class="modal-close mono text-zinc-300 uppercase" type="button">Close</button>
       </div>
@@ -743,7 +971,7 @@ method: PrimeOps
     </div>
   </div>
 
-  <!-- IMAGE MODAL -->
+  <!-- MODAL: IMAGE LIGHTBOX -->
   <div id="imgModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="imgModalTitle" data-open="false">
     <div class="modal-panel">
       <div class="modal-header">
@@ -756,20 +984,9 @@ method: PrimeOps
     </div>
   </div>
 
+  <!-- JAVASCRIPT -->
   <script>
-    // ---------- Scroll controls (fix "buttons doing nothing") ----------
-    function scrollToId(id) {
-      const el = document.getElementById(id);
-      if (!el) return;
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-      // For Safari quirks
-      setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
-    }
-
-    document.getElementById("btnViewProjects")?.addEventListener("click", () => scrollToId("projects"));
-    document.getElementById("btnHiringFit")?.addEventListener("click", () => scrollToId("hiring"));
-
-    // ---------- PrimeOps modal content map ----------
+    /* ─── PrimeOps modal content map ─── */
     const PRIMEOPS = {
       P: { key:"P", label:"Purpose", body:"Entender o propósito do sistema e o “por quê” do problema antes de agir. Define objetivo, sucesso e limitações.", ask:"Qual é o objetivo real?", evidence:"O que é fato vs suposição?", guardrail:"O que não pode quebrar?" },
       R: { key:"R", label:"Rules / Fundamentals", body:"Identificar as regras e fundamentos que governam o sistema (rede, SO, segurança, processo). Evita correções que só mascaram sintomas.", ask:"Qual regra está sendo violada?", evidence:"Quais sinais confirmam a causa?", guardrail:"Quais padrões devem ser mantidos?" },
@@ -777,9 +994,10 @@ method: PrimeOps
       M: { key:"M", label:"Map / Connections", body:"Mapear dependências, fluxos e conexões (sistemas, integrações, rede, autenticação). Evita “conserto local” em problema sistêmico.", ask:"Onde começa e onde termina?", evidence:"Qual dependência falhou primeiro?", guardrail:"Qual elo é ponto único de falha?" },
       E: { key:"E", label:"Execution (Controlled Change)", body:"Executar mudança controlada: pequeno passo, reversível, com validação. Reduz risco e acelera aprendizado real.", ask:"Qual é o menor teste seguro?", evidence:"Como validar rapidamente?", guardrail:"Qual o plano de rollback?" },
       O: { key:"O", label:"Observability", body:"Instrumentar telemetria e sinais acionáveis (logs, métricas, traces, alertas). Sem observabilidade, não existe controle nem previsibilidade.", ask:"Qual sinal prova a melhora?", evidence:"Qual métrica confirma?", guardrail:"Como evitar regressão?" },
-      PS:{ key:"PS",label:"Padronizar & Sistematizar", body:"Transformar solução em padrão: runbook, checklist, automação e aprendizado organizacional. É aqui que escala e autoridade nascem.", ask:"O que vira template/runbook?", evidence:"Qual passo foi repetido?", guardrail:"Como garantir consistência?" }
+      PS:{ key:"PS", label:"Padronizar & Sistematizar", body:"Transformar solução em padrão: runbook, checklist, automação e aprendizado organizacional. É aqui que escala e autoridade nascem.", ask:"O que vira template/runbook?", evidence:"Qual passo foi repetido?", guardrail:"Como garantir consistência?" }
     };
 
+    /* ─── DOM refs ─── */
     const primeopsModal      = document.getElementById("primeopsModal");
     const primeopsModalClose = document.getElementById("primeopsModalClose");
     const primeopsKey        = document.getElementById("primeopsKey");
@@ -816,14 +1034,19 @@ method: PrimeOps
       if (!trigger) return;
       e.preventDefault();
       const key = trigger.getAttribute("data-primeops-open");
-      if (primeopsModal.dataset.open === "true") updatePrimeopsContent(key);
-      else openPrimeopsModal(key);
+      if (primeopsModal.dataset.open === "true") {
+        updatePrimeopsContent(key);
+      } else {
+        openPrimeopsModal(key);
+      }
     });
 
     primeopsModalClose.addEventListener("click", closePrimeopsModal);
-    primeopsModal.addEventListener("click", (e) => { if (e.target === primeopsModal) closePrimeopsModal(); });
+    primeopsModal.addEventListener("click", (e) => {
+      if (e.target === primeopsModal) closePrimeopsModal();
+    });
 
-    // ---------- Lightbox modal ----------
+    /* ─── Lightbox modal ─── */
     const imgModal      = document.getElementById("imgModal");
     const imgModalClose = document.getElementById("imgModalClose");
     const imgModalEl    = document.getElementById("imgModalEl");
@@ -834,6 +1057,7 @@ method: PrimeOps
       imgModalClose.focus();
       document.body.style.overflow = "hidden";
     }
+
     function closeImgModal() {
       imgModal.dataset.open = "false";
       imgModalEl.src = "";
@@ -845,8 +1069,47 @@ method: PrimeOps
     });
 
     imgModalClose.addEventListener("click", closeImgModal);
-    imgModal.addEventListener("click", (e) => { if (e.target === imgModal) closeImgModal(); });
+    imgModal.addEventListener("click", (e) => {
+      if (e.target === imgModal) closeImgModal();
+    });
 
+    /* ─── Smooth scroll to project (micro CTA mapping) ─── */
+    function scrollToProject(projectId) {
+      const el = document.getElementById(`project-${projectId}`);
+      if (!el) return;
+
+      // Ensure Projects section is visible first
+      const projectsSection = document.getElementById("projects");
+      if (projectsSection) {
+        projectsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      // Then snap to the card with a slight delay (allows layout/scroll to settle)
+      setTimeout(() => {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        // subtle focus ring for accessibility
+        el.setAttribute("tabindex", "-1");
+        el.focus({ preventScroll: true });
+        el.style.outline = "2px solid rgba(34, 197, 94, 0.35)";
+        el.style.outlineOffset = "6px";
+        setTimeout(() => {
+          el.style.outline = "";
+          el.style.outlineOffset = "";
+          el.removeAttribute("tabindex");
+        }, 1200);
+      }, 180);
+    }
+
+    // Delegate clicks for micro CTA links
+    document.addEventListener("click", (e) => {
+      const link = e.target.closest("[data-scroll-project]");
+      if (!link) return;
+      e.preventDefault();
+      const pid = link.getAttribute("data-scroll-project");
+      scrollToProject(pid);
+    });
+
+    /* ─── Global keyboard ─── */
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
         if (primeopsModal.dataset.open === "true") closePrimeopsModal();
@@ -854,14 +1117,16 @@ method: PrimeOps
       }
     });
 
-    // ---------- Intersection Observer animations ----------
+    /* ─── Intersection Observer for scroll animations ─── */
     const observer = new IntersectionObserver(
-      (entries) => entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.style.animationPlayState = "running";
-          observer.unobserve(entry.target);
-        }
-      }),
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.style.animationPlayState = "running";
+            observer.unobserve(entry.target);
+          }
+        });
+      },
       { threshold: 0.1 }
     );
 
