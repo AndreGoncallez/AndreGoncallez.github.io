@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PrimeOps | Andre Goncallez — Infrastructure • Cloud & Security (in progress) • Observability</title>
+  <link rel="icon" href="https://public-frontend-cos.metadl.com/mgx/img/favicon_atoms.ico" type="image/x-icon">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #09090b;
+      --panel: #0c0c0e;
+      --card: #121214;
+      --stroke: #27272a;
+      --muted: #a1a1aa;
+      --text: #d4d4d8;
+      --green: #22c55e;
+      --blue: #3b82f6;
+      --amber: #f59e0b;
+      --purple: #a855f7;
+      --transition-fast: 150ms ease;
+      --transition-base: 250ms ease;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+    }
+
+    .mono { font-family: 'Fira Code', monospace; }
+
+    h1, h2, h3 {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: -0.025em;
+      color: #ffffff;
+    }
+
+    .terminal-card {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      transition: border-color var(--transition-base), box-shadow var(--transition-base);
+    }
+    .terminal-card:hover {
+      border-color: var(--green);
+      box-shadow: 0 0 24px rgba(34, 197, 94, 0.06);
+    }
+
+    .chip {
+      background: #0f0f12;
+      border: 1px solid var(--stroke);
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      color: var(--text);
+      transition: border-color var(--transition-fast);
+    }
+    .chip:hover { border-color: rgba(255, 255, 255, 0.15); }
+
+    .btn {
+      border: 1px solid var(--stroke);
+      background: #0f0f12;
+      transition: border-color var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
+    }
+    .btn:hover {
+      border-color: rgba(34, 197, 94, 0.6);
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.05);
+    }
+
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+
+    .accent-bar { height: 3px; width: 40px; border-radius: 4px; }
+    .accent-bar--green  { background: var(--green); }
+    .accent-bar--blue   { background: var(--blue); }
+    .accent-bar--amber  { background: var(--amber); }
+    .accent-bar--purple { background: var(--purple); }
+
+    .primeops-btn {
+      width: 100%;
+      text-align: left;
+      border: 1px solid rgba(39, 39, 42, 0.9);
+      background: rgba(0, 0, 0, 0.18);
+      padding: 14px;
+      border-radius: var(--radius-md);
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+      cursor: pointer;
+    }
+    .primeops-btn:hover {
+      border-color: rgba(34, 197, 94, 0.45);
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.06);
+    }
+    .primeops-btn:focus {
+      outline: none;
+      border-color: rgba(34, 197, 94, 0.8);
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
+    }
+
+    .media-thumb {
+      border: 1px solid rgba(39, 39, 42, 0.9);
+      background: rgba(0, 0, 0, 0.14);
+      border-radius: 14px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color var(--transition-base), transform var(--transition-base);
+    }
+    .media-thumb:hover { border-color: rgba(34, 197, 94, 0.45); transform: translateY(-2px); }
+    .media-thumb img { display: block; width: 100%; height: auto; }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.62);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 50;
+    }
+    .modal-backdrop[data-open="true"] { display: flex; animation: fadeIn 200ms ease; }
+
+    .modal-panel {
+      width: min(920px, 100%);
+      border: 1px solid rgba(39, 39, 42, 0.9);
+      background: linear-gradient(180deg, rgba(18, 18, 20, 0.98), rgba(12, 12, 14, 0.98));
+      border-radius: var(--radius-lg);
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.55);
+      overflow: hidden;
+      animation: slideUp 250ms ease;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(39, 39, 42, 0.9);
+      background: rgba(12, 12, 14, 0.8);
+    }
+
+    .modal-close {
+      border: 1px solid rgba(39, 39, 42, 0.9);
+      background: #0f0f12;
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: border-color var(--transition-fast), color var(--transition-fast);
+    }
+    .modal-close:hover { border-color: rgba(34, 197, 94, 0.6); color: #fff; }
+
+    .kbd {
+      border: 1px solid rgba(39, 39, 42, 0.9);
+      background: #0b0b0d;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 10px;
+      color: #a1a1aa;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(16px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+    .animate-in { animation: fadeInUp 400ms ease forwards; opacity: 0; }
+    .animate-in:nth-child(1) { animation-delay: 50ms; }
+    .animate-in:nth-child(2) { animation-delay: 100ms; }
+    .animate-in:nth-child(3) { animation-delay: 150ms; }
+    .animate-in:nth-child(4) { animation-delay: 200ms; }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #09090b; }
+    ::-webkit-scrollbar-thumb { background: #2a2a2e; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3a3a3e; }
+
+    .mono-label {
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .section-divider { border-top: 1px solid var(--stroke); margin-top: 16px; padding-top: 16px; }
+
+    .info-cell {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+    }
+    .info-cell .info-label {
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .info-cell .info-value { font-size: 12px; color: var(--text); }
+
+    .status-tag {
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .view-link {
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      transition: color var(--transition-fast);
+    }
+    .view-link:hover { color: #fff; }
+  </style>
+</head>
+
+<body class="h-screen flex flex-col overflow-hidden">
+
+  <header class="border-b border-zinc-800 bg-[var(--panel)] px-6 py-3 flex justify-between items-center">
+    <div class="flex gap-4 items-center mono text-[10px] tracking-tight text-zinc-500">
+      <span class="flex items-center gap-2">
+        <span class="status-dot bg-green-500 animate-pulse"></span>
+        <span>SYSTEM: OPERATIONAL</span>
+      </span>
+      <span class="hidden md:inline">| REGION: BR-CE-1</span>
+      <span class="hidden md:inline">| MODE: PRIMEOPS_AUTHORITY</span>
+    </div>
+    <div class="text-zinc-400 font-bold mono text-[10px] tracking-tight uppercase">PrimeOps // Portfolio_Command_Center</div>
+  </header>
+
+  <main class="flex-1 grid grid-cols-12 overflow-hidden">
+
+    <aside class="col-span-12 md:col-span-4 xl:col-span-3 border-r border-zinc-800 p-6 bg-[var(--panel)] overflow-y-auto">
+
+      <div class="mb-7">
+        <h1 class="text-2xl tracking-tight">Andre_Goncallez</h1>
+        <p class="text-[11px] text-green-500 mono mt-1">Infrastructure Analyst | Cloud & Security (in progress) • Observability</p>
+
+        <div class="mt-4 grid grid-cols-2 gap-2">
+          <a class="btn rounded-lg px-3 py-2 text-[11px] mono text-zinc-300 hover:text-white flex items-center justify-between"
+             href="https://linkedin.com/in/andregoncallez" target="_blank" rel="noreferrer">
+            LINKEDIN <span class="text-zinc-500">↗</span>
+          </a>
+          <a class="btn rounded-lg px-3 py-2 text-[11px] mono text-zinc-300 hover:text-white flex items-center justify-between"
+             href="https://github.com/AndreGoncallez" target="_blank" rel="noreferrer">
+            GITHUB <span class="text-zinc-500">↗</span>
+          </a>
+          <a class="btn rounded-lg px-3 py-2 text-[11px] mono text-zinc-300 hover:text-white flex items-center justify-between col-span-2"
+             href="https://discord.gg/w2pUgGqY" target="_blank" rel="noreferrer">
+            DISCORD: MASTER_ARENA <span class="text-zinc-500">JOIN</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="terminal-card rounded-xl p-4 mb-6">
+        <h2 class="text-[11px] mb-3 border-b border-zinc-800 pb-2">Recruiter_Quick_Read</h2>
+        <ul class="text-[12px] text-zinc-300 space-y-2">
+          <li class="flex gap-2"><span class="text-green-500 mono">✓</span> Infra & Redes (cabeado/fibra) + troubleshooting real</li>
+          <li class="flex gap-2"><span class="text-green-500 mono">✓</span> Observabilidade (Zabbix/Grafana) + runbooks/playbooks</li>
+          <li class="flex gap-2"><span class="text-green-500 mono">✓</span> Automação operacional (n8n) + processos escaláveis</li>
+          <li class="flex gap-2"><span class="text-green-500 mono">✓</span> Direção clara: Cloud + Security + DevSecOps</li>
+        </ul>
+      </div>
+
+      <div class="mb-6">
+        <div class="mono-label mb-2">Tech_Stack</div>
+        <div class="flex flex-wrap gap-2">
+          <span class="chip px-2 py-1 rounded">Linux</span>
+          <span class="chip px-2 py-1 rounded">Networking</span>
+          <span class="chip px-2 py-1 rounded">Zabbix</span>
+          <span class="chip px-2 py-1 rounded">Grafana</span>
+          <span class="chip px-2 py-1 rounded">Windows Server</span>
+          <span class="chip px-2 py-1 rounded">Hyper-V</span>
+          <span class="chip px-2 py-1 rounded">n8n</span>
+          <span class="chip px-2 py-1 rounded">CI/CD</span>
+          <span class="chip px-2 py-1 rounded">GCP (Roadmap)</span>
+          <span class="chip px-2 py-1 rounded">AWS (Roadmap)</span>
+        </div>
+      </div>
+
+      <div class="terminal-card rounded-xl p-4 mb-6">
+        <h2 class="text-[11px] mb-3 border-b border-zinc-800 pb-2">PrimeOps_Manifest</h2>
+        <pre class="text-[11px] leading-relaxed mono text-zinc-300 whitespace-pre-wrap">signature: "Pensar antes de agir. Entender antes de mudar. Documentar para evoluir."
+method: PrimeOps
+  P: Purpose (por quê)
+  R: Rules/Fundamentals
+  I: Impacts (risco/custo/disponibilidade)
+  M: Map/Connections (sistemas/dependências)
+  E: Execution (mudança controlada)
+  O: Observability (telemetria/alertas)
+  PS: Standardize/Systemize (documentação + escala)</pre>
+      </div>
+
+      <div class="terminal-card rounded-xl p-4">
+        <h2 class="text-[11px] mb-3 border-b border-zinc-800 pb-2">Certs_And_Roadmap</h2>
+        <ul class="text-[12px] text-zinc-300 space-y-2">
+          <li><span class="text-zinc-500 mono">NOW:</span> CCNA (Fase 2) • LPIC-1 • CyberOps (planejado)</li>
+          <li><span class="text-zinc-500 mono">2026_H1:</span> GCP ACE → PCA → PCSE (Academy)</li>
+          <li><span class="text-zinc-500 mono">2026_H2:</span> AWS SAA + (opcional) SysOps</li>
+          <li><span class="text-zinc-500 mono">EDU:</span> CC (IMES) • Big Data (Anhembi) • Pós (PUC Minas)</li>
+        </ul>
+      </div>
+
+    </aside>
+
+    <section class="col-span-12 md:col-span-8 xl:col-span-9 p-8 overflow-y-auto">
+
+      <div class="mb-10 animate-in">
+        <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+          <div>
+            <h2 class="text-4xl tracking-tight">Infrastructure • Cloud & Security (in progress) • Observability</h2>
+            <p class="text-zinc-400 max-w-3xl mt-2">
+              Infrastructure Analyst com base forte em redes e operação.
+              Em transição para <span class="text-white font-semibold">Cloud/Observability</span> e <span class="text-white font-semibold">Security Ops</span> (in progress),
+              com foco em automação, runbooks e documentação.
+            </p>
+          </div>
+
+          <div class="flex gap-2 shrink-0">
+            <button type="button" id="btnViewProjects" class="btn rounded-xl px-4 py-3 text-[11px] mono text-zinc-200 hover:text-white uppercase">View_Projects</button>
+            <button type="button" id="btnHiringFit" class="btn rounded-xl px-4 py-3 text-[11px] mono text-zinc-200 hover:text-white uppercase">Hiring_Fit</button>
+          </div>
+        </div>
+
+        <div class="mt-5 flex flex-wrap gap-2">
+          <span class="chip px-2 py-1 rounded">Entry: Cloud Support / Jr Cloud</span>
+          <span class="chip px-2 py-1 rounded">Entry: Observability / NOC+</span>
+          <span class="chip px-2 py-1 rounded">Path: DevSecOps</span>
+          <span class="chip px-2 py-1 rounded">Path: Cloud Security</span>
+          <span class="chip px-2 py-1 rounded text-green-300 !border-green-500/30">Differential: PrimeOps (in development)</span>
+          <span class="chip px-2 py-1 rounded text-blue-300 !border-blue-500/30">Layer: HootAI (in development)</span>
+        </div>
+      </div>
+
+      <div id="hiring" class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-10">
+        <div class="terminal-card rounded-xl p-5 animate-in">
+          <div class="accent-bar accent-bar--green mb-4"></div>
+          <h3 class="text-base mb-2">Cloud Entry (Jr)</h3>
+          <p class="text-sm text-zinc-400">Cloud Support / Jr Cloud Engineer com base forte em Infra, redes e operação.</p>
+          <ul class="mt-3 text-[12px] text-zinc-300 space-y-2">
+            <li>• incident triage</li>
+            <li>• infra fundamentals</li>
+            <li>• documentação e padronização</li>
+          </ul>
+        </div>
+
+        <div class="terminal-card rounded-xl p-5 animate-in">
+          <div class="accent-bar accent-bar--blue mb-4"></div>
+          <h3 class="text-base mb-2">Observability / Reliability</h3>
+          <p class="text-sm text-zinc-400">NOC+ / Observability Engineer: telemetria, alertas acionáveis e runbooks.</p>
+          <ul class="mt-3 text-[12px] text-zinc-300 space-y-2">
+            <li>• Zabbix/Grafana</li>
+            <li>• SLO-lite & pain points</li>
+            <li>• playbooks de resposta</li>
+          </ul>
+        </div>
+
+        <div class="terminal-card rounded-xl p-5 animate-in">
+          <div class="accent-bar accent-bar--purple mb-4"></div>
+          <h3 class="text-base mb-2">Security / DevSecOps Path</h3>
+          <p class="text-sm text-zinc-400">Evolução para segurança integrada: controles, logging e automação no pipeline.</p>
+          <ul class="mt-3 text-[12px] text-zinc-300 space-y-2">
+            <li>• IAM e hardening</li>
+            <li>• policy & guardrails</li>
+            <li>• automação operacional</li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="projects" class="mb-10">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-2xl">Projects</h2>
+          <span class="mono-label">REAL_WORK • LABS • DOCS • AUTOMATION</span>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+
+          <article class="terminal-card p-6 rounded-xl animate-in">
+            <div class="flex justify-between items-start">
+              <div class="accent-bar accent-bar--amber"></div>
+              <span class="mono-label">ID: PRM-OBS-001</span>
+            </div>
+            <h3 class="text-base mt-3">Observability Blueprint: Alerts → Dashboards → Runbooks</h3>
+            <p class="text-sm text-zinc-400 mt-2">
+              Padrão de observabilidade com foco em <span class="text-white font-semibold">alerta acionável</span>, redução de ruído e resposta guiada.
+            </p>
+
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div class="info-cell">
+                <div class="info-label">Problem</div>
+                <div class="info-value">alert fatigue + baixa previsibilidade</div>
+              </div>
+              <div class="info-cell">
+                <div class="info-label">Approach</div>
+                <div class="info-value">Zabbix/Grafana + runbooks + padronização</div>
+              </div>
+              <div class="info-cell">
+                <div class="info-label">Outcome</div>
+                <div class="info-value">triage mais rápido e repetível (documentado)</div>
+              </div>
+            </div>
+
+            <div class="section-divider flex justify-between items-center">
+              <span class="status-tag text-amber-300">STATUS: READY_TO_PUBLISH</span>
+              <a href="https://github.com/AndreGoncallez" target="_blank" rel="noreferrer" class="view-link text-zinc-400">VIEW_REPO</a>
+            </div>
+          </article>
+
+          <article class="terminal-card p-6 rounded-xl animate-in">
+            <div class="flex justify-between items-start">
+              <div class="accent-bar accent-bar--green"></div>
+              <span class="mono-label">ID: PRM-AUT-002</span>
+            </div>
+            <h3 class="text-base mt-3">Operational Automation: N8N Workflow System</h3>
+            <p class="text-sm text-zinc-400 mt-2">
+              Automação operacional (intake → classificação → roteamento → logs) com foco em <span class="text-white font-semibold">redução de trabalho manual</span>.
+            </p>
+
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div class="info-cell">
+                <div class="info-label">Problem</div>
+                <div class="info-value">processo manual, inconsistência, retrabalho</div>
+              </div>
+              <div class="info-cell">
+                <div class="info-label">Approach</div>
+                <div class="info-value">workflow modular + logging + validação</div>
+              </div>
+              <div class="info-cell">
+                <div class="info-label">Outcome</div>
+                <div class="info-value">pipeline repetível e escalável</div>
+              </div>
+            </div>
+
+            <div class="section-divider flex justify-between items-center">
+              <span class="status-tag text-green-300">STATUS: ACTIVE_BUILD</span>
+              <a href="https://github.com/AndreGoncallez" target="_blank" rel="noreferrer" class="view-link text-zinc-400">VIEW_DOCS</a>
+            </div>
+          </article>
+
+          <article class="terminal-card p-6 rounded-xl animate-in">
+            <div class="flex justify-between items-start">
+              <div class="accent-bar accent-bar--blue"></div>
+              <span class="mono-label">ID: PRM-NET-003</span>
+            </div>
+            <h3 class="text-base mt-3">Network Labs: Switching/Routing/Troubleshooting</h3>
+            <p class="text-sm text-zinc-400 mt-2">
+              Labs orientados a operação real (NOC/Infra): diagnóstico, evidência e documentação.
+            </p>
+
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div class="info-cell">
+                <div class="info-label">Focus</div>
+                <div class="info-value">CCNA + operação de redes</div>
+              </div>
+              <div class="info-cell">
+                <div class="info-label">Artifacts</div>
+                <div class="info-value">diagramas, configs, runbooks</div>
+              </div>
+              <div class="info-cell">
+                <div class="info-label">Value</div>
+                <div class="info-value">base forte pra Cloud/Security</div>
+              </div>
+            </div>
+
+            <div class="section-divider flex justify-between items-center">
+              <span class="status-tag text-blue-300">STATUS: SEEDING</span>
+              <a href="https://github.com/AndreGoncallez/Network-Support-Projects-LAN-Switches-NOC" target="_blank" rel="noreferrer" class="view-link text-zinc-400">VIEW_REPO</a>
+            </div>
+          </article>
+
+          <article class="terminal-card p-6 rounded-xl animate-in">
+            <div class="flex justify-between items-start">
+              <div class="accent-bar accent-bar--purple"></div>
+              <span class="mono-label">ID: PRM-DC-004</span>
+            </div>
+            <h3 class="text-base mt-3">PrimeOps Datacenter: Hybrid Cloud Lab</h3>
+            <p class="text-sm text-zinc-400 mt-2">
+              Ambiente de laboratório para simular infraestrutura real: VLANs, firewall, identidade e observabilidade (evolutivo).
+            </p>
+
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div class="info-cell">
+                <div class="info-label">Scope</div>
+                <div class="info-value">Proxmox • pfSense • Windows AD • Linux</div>
+              </div>
+              <div class="info-cell">
+                <div class="info-label">Method</div>
+                <div class="info-value">PrimeOps aplicado em labs</div>
+              </div>
+              <div class="info-cell">
+                <div class="info-label">Status</div>
+                <div class="info-value">running + iterating</div>
+              </div>
+            </div>
+
+            <div class="section-divider flex justify-between items-center">
+              <span class="status-tag text-purple-300">STATUS: ACTIVE</span>
+              <a href="https://github.com/AndreGoncallez/PrimeOps-Datacenter" target="_blank" rel="noreferrer" class="view-link text-zinc-400">VIEW_REPO</a>
+            </div>
+          </article>
+
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-10">
+
+        <div class="terminal-card rounded-xl p-6">
+          <h3 class="text-xl">PrimeOps Method</h3>
+          <p class="text-sm text-zinc-400 mt-2">
+            PrimeOps não é "teoria". É um sistema operacional de execução: diagnosticar, decidir, mudar com controle e documentar para escala.
+          </p>
+
+          <div class="mt-4 grid grid-cols-2 gap-2 text-[12px] text-zinc-300">
+            <button class="primeops-btn" data-primeops-open="P" aria-haspopup="dialog" type="button"><span class="mono text-zinc-500 text-[10px]">P</span> PURPOSE</button>
+            <button class="primeops-btn" data-primeops-open="R" aria-haspopup="dialog" type="button"><span class="mono text-zinc-500 text-[10px]">R</span> RULES</button>
+            <button class="primeops-btn" data-primeops-open="I" aria-haspopup="dialog" type="button"><span class="mono text-zinc-500 text-[10px]">I</span> IMPACTS</button>
+            <button class="primeops-btn" data-primeops-open="M" aria-haspopup="dialog" type="button"><span class="mono text-zinc-500 text-[10px]">M</span> MAP</button>
+            <button class="primeops-btn" data-primeops-open="E" aria-haspopup="dialog" type="button"><span class="mono text-zinc-500 text-[10px]">E</span> EXECUTION</button>
+            <button class="primeops-btn" data-primeops-open="O" aria-haspopup="dialog" type="button"><span class="mono text-zinc-500 text-[10px]">O</span> OBSERVABILITY</button>
+          </div>
+
+          <div class="section-divider flex justify-between items-center">
+            <span class="status-tag text-green-300">DIFFERENTIAL: SYSTEM_THINKING + EXECUTION</span>
+            <a href="#" data-primeops-open="P" class="view-link text-zinc-400">VIEW_METHOD</a>
+          </div>
+        </div>
+
+        <div class="terminal-card rounded-xl p-6">
+          <h3 class="text-xl">HootAI Layer</h3>
+          <p class="text-sm text-zinc-400 mt-2">
+            HootAI é uma camada assistida para operação e aprendizado (em desenvolvimento): runbooks, troubleshooting guiado e padronização.
+          </p>
+
+          <div class="mt-4 space-y-2 text-[12px] text-zinc-300">
+            <div class="info-cell">
+              <div class="info-label">Use Cases</div>
+              <div class="info-value">Runbooks • triage • aprendizado • templates de incidentes</div>
+            </div>
+            <div class="info-cell">
+              <div class="info-label">Positioning</div>
+              <div class="info-value">AI-assisted operations (sem prometer "IA mágica")</div>
+            </div>
+          </div>
+
+          <div class="section-divider flex justify-between items-center">
+            <span class="status-tag text-blue-300">LAYER: OPS_ACCELERATION</span>
+            <a href="https://github.com/AndreGoncallez" target="_blank" rel="noreferrer" class="view-link text-zinc-400">VIEW_DEMO</a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="terminal-card rounded-xl p-6 mb-10">
+        <div class="flex justify-between items-start">
+          <div class="accent-bar accent-bar--green"></div>
+          <span class="mono-label">AUTH: BOOK + FRAMEWORK</span>
+        </div>
+        <h3 class="text-xl mt-3">Book / Publications</h3>
+        <p class="text-sm text-zinc-400 mt-2 max-w-4xl">
+          Livro em desenvolvimento com foco em maturidade operacional, tomada de decisão e execução padronizada.
+          Apoiado por projetos e artefatos públicos.
+        </p>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <span class="chip px-2 py-1 rounded">operational maturity</span>
+          <span class="chip px-2 py-1 rounded">incident playbooks</span>
+          <span class="chip px-2 py-1 rounded">cloud/security fundamentals</span>
+        </div>
+        <div class="section-divider flex justify-between items-center">
+          <span class="mono text-[10px] text-zinc-400">NOTE: AUTORIDADE APOIADA POR PROJETOS E ARTEFATOS PÚBLICOS</span>
+          <a href="https://github.com/AndreGoncallez" target="_blank" rel="noreferrer" class="view-link text-zinc-400">READ_PREVIEW</a>
+        </div>
+      </div>
+
+      <div class="terminal-card rounded-xl p-6 mb-10">
+        <div class="flex justify-between items-start">
+          <div class="accent-bar accent-bar--blue"></div>
+          <span class="mono-label">PRIMEOPS: SERVICE_DECKS</span>
+        </div>
+
+        <h3 class="text-xl mt-3">PrimeOps — Automation & Monitoring (PDFs)</h3>
+        <p class="text-sm text-zinc-400 mt-2 max-w-4xl">
+          Materiais de apoio (decks) para apresentar a PrimeOps como empresa de automação e monitoramento.
+        </p>
+
+        <div class="mt-5 grid grid-cols-1 lg:grid-cols-2 gap-3">
+          <a class="btn rounded-xl px-4 py-4 text-[12px] mono text-zinc-200 hover:text-white flex items-center justify-between"
+             href="./assets/PrimeOps_Inteligencia_Operacional.pdf" target="_blank" rel="noreferrer">
+            <span>
+              <span class="text-green-300 uppercase">Open_Pdf</span> // PrimeOps: Monitoramento & Inteligência Operacional
+              <span class="block text-[10px] text-zinc-500 mono mt-1">DECK: OBSERVABILITY + KPIS + GRAFANA + PREVENÇÃO</span>
+            </span>
+            <span class="text-zinc-500">↗</span>
+          </a>
+
+          <a class="btn rounded-xl px-4 py-4 text-[12px] mono text-zinc-200 hover:text-white flex items-center justify-between"
+             href="./assets/Imunidade_Operacional_Negocios_sem_Parar.pdf" target="_blank" rel="noreferrer">
+            <span>
+              <span class="text-green-300 uppercase">Open_Pdf</span> // Automação & Monitoramento para Continuidade de Negócios
+              <span class="block text-[10px] text-zinc-500 mono mt-1">DECK: AUTOMAÇÃO INTELIGENTE + MONITORAMENTO EM TEMPO REAL</span>
+            </span>
+            <span class="text-zinc-500">↗</span>
+          </a>
+        </div>
+
+        <div class="section-divider flex justify-between items-center">
+          <span class="mono text-[10px] text-zinc-400">TIP: MANTENHA PDFS EM /assets COM ESSES NOMES</span>
+          <span class="status-tag text-blue-300">OUTPUT: CLIENT_READY</span>
+        </div>
+      </div>
+
+      <div class="terminal-card rounded-xl p-6 mb-10">
+        <div class="flex justify-between items-start">
+          <div class="accent-bar accent-bar--purple"></div>
+          <span class="mono-label">MEDIA: BRAND_ASSETS</span>
+        </div>
+        <h3 class="text-xl mt-3">Media Kit (Images)</h3>
+        <p class="text-sm text-zinc-400 mt-2 max-w-4xl">
+          Assets visuais: RootAI, infográfico PrimeOps e capa do livro.
+        </p>
+
+        <div class="mt-5 grid grid-cols-1 lg:grid-cols-3 gap-3">
+          <button class="media-thumb" data-img="./assets/ROOTAI.png" aria-haspopup="dialog" type="button">
+            <img src="./assets/ROOTAI.png" alt="RootAI by PrimeOps" loading="lazy" />
+          </button>
+          <button class="media-thumb" data-img="./assets/Infographic.jpg" aria-haspopup="dialog" type="button">
+            <img src="./assets/Infographic.jpg" alt="Infográfico PrimeOps" loading="lazy" />
+          </button>
+          <button class="media-thumb" data-img="./assets/Capa_Livro_PrimeOps.png" aria-haspopup="dialog" type="button">
+            <img src="./assets/Capa_Livro_PrimeOps.png" alt="Capa do livro PrimeOps" loading="lazy" />
+          </button>
+        </div>
+
+        <div class="section-divider flex justify-between items-center">
+          <span class="mono text-[10px] text-zinc-400">NOTE: MANTENHA IMAGENS EM /assets</span>
+          <span class="status-tag text-purple-300">STATUS: PRESS_READY</span>
+        </div>
+      </div>
+
+      <div class="terminal-card rounded-xl p-6">
+        <h3 class="text-xl">Contact / Collaboration</h3>
+        <p class="text-sm text-zinc-400 mt-2">
+          Disponível para posições de entrada/transição em Cloud/Observability, com trilha clara para DevSecOps e Cloud Security.
+        </p>
+
+        <div class="mt-4 flex flex-wrap gap-2">
+          <a href="https://linkedin.com/in/andregoncallez" target="_blank" rel="noreferrer"
+             class="btn rounded-xl px-4 py-3 text-[11px] mono text-zinc-200 hover:text-white uppercase">
+            Message_On_LinkedIn
+          </a>
+          <a href="https://github.com/AndreGoncallez" target="_blank" rel="noreferrer"
+             class="btn rounded-xl px-4 py-3 text-[11px] mono text-zinc-200 hover:text-white uppercase">
+            Review_GitHub
+          </a>
+        </div>
+
+        <p class="text-green-500 mono text-[11px] mt-5">
+          > primeops --run "Pensar antes de agir. Entender antes de mudar. Documentar para evoluir."
+        </p>
+      </div>
+
+      <div class="text-center mono-label mt-8 pb-4">
+        PRIMEOPS_SIGNATURE: 0XPR1M30PS // DOCS_REQUIRED // SYSTEMS_OVER_HYPE
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- PRIMEOPS MODAL -->
+  <div id="primeopsModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="primeopsModalTitle" aria-describedby="primeopsModalDesc" data-open="false">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <div>
+          <div id="primeopsModalTitle" class="text-white font-bold mono text-[12px] tracking-tight uppercase">PrimeOps_Method // Detail_View</div>
+          <div class="text-[10px] mono text-zinc-500 mt-0.5">Press <span class="kbd">Esc</span> to close</div>
+        </div>
+        <button id="primeopsModalClose" class="modal-close mono text-zinc-300 uppercase" type="button">Close</button>
+      </div>
+
+      <div class="p-6">
+        <p id="primeopsModalDesc" class="text-sm text-zinc-400 max-w-4xl">
+          PrimeOps é um sistema operacional de execução: diagnosticar, decidir, mudar com controle e documentar para escala.
+        </p>
+
+        <div class="mt-5 grid grid-cols-1 lg:grid-cols-3 gap-3">
+          <div class="info-cell !p-4">
+            <div class="info-label">Selected</div>
+            <div class="mt-2 text-white font-bold text-xl uppercase" id="primeopsKey">P</div>
+            <div class="mt-1 text-zinc-300 mono text-[12px] uppercase" id="primeopsLabel">Purpose</div>
+          </div>
+
+          <div class="lg:col-span-2 info-cell !p-4">
+            <div class="info-label">Definition</div>
+            <div class="mt-2 text-zinc-200 text-sm leading-relaxed" id="primeopsBody">
+              Entender o propósito do sistema e o "por quê" do problema antes de agir. Define objetivo, sucesso e limitações.
+            </div>
+
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-2">
+              <div class="info-cell">
+                <div class="info-label">Ask</div>
+                <div class="info-value" id="primeopsAsk">Qual é o objetivo real?</div>
+              </div>
+              <div class="info-cell">
+                <div class="info-label">Evidence</div>
+                <div class="info-value" id="primeopsEvidence">O que é fato vs suposição?</div>
+              </div>
+              <div class="info-cell">
+                <div class="info-label">Guardrail</div>
+                <div class="info-value" id="primeopsGuardrail">O que não pode quebrar?</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-5 border-t border-zinc-800 pt-4 flex flex-wrap gap-2">
+          <button class="btn rounded-xl px-3 py-2 text-[11px] mono text-zinc-200 hover:text-white uppercase" data-primeops-open="P" type="button">P // Purpose</button>
+          <button class="btn rounded-xl px-3 py-2 text-[11px] mono text-zinc-200 hover:text-white uppercase" data-primeops-open="R" type="button">R // Rules</button>
+          <button class="btn rounded-xl px-3 py-2 text-[11px] mono text-zinc-200 hover:text-white uppercase" data-primeops-open="I" type="button">I // Impacts</button>
+          <button class="btn rounded-xl px-3 py-2 text-[11px] mono text-zinc-200 hover:text-white uppercase" data-primeops-open="M" type="button">M // Map</button>
+          <button class="btn rounded-xl px-3 py-2 text-[11px] mono text-zinc-200 hover:text-white uppercase" data-primeops-open="E" type="button">E // Execution</button>
+          <button class="btn rounded-xl px-3 py-2 text-[11px] mono text-zinc-200 hover:text-white uppercase" data-primeops-open="O" type="button">O // Observability</button>
+          <button class="btn rounded-xl px-3 py-2 text-[11px] mono text-zinc-200 hover:text-white uppercase" data-primeops-open="PS" type="button">PS // Standardize_And_Systemize</button>
+        </div>
+
+        <div class="mt-5 text-green-500 mono text-[11px]">
+          > primeops --explain "Pensar antes de agir. Entender antes de mudar. Documentar para evoluir."
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMAGE MODAL -->
+  <div id="imgModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="imgModalTitle" data-open="false">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <div id="imgModalTitle" class="text-white font-bold mono text-[12px] tracking-tight uppercase">Media_Preview // Image</div>
+        <button id="imgModalClose" class="modal-close mono text-zinc-300 uppercase" type="button">Close</button>
+      </div>
+      <div class="p-4 bg-black/30">
+        <img id="imgModalEl" src="" alt="Media preview" class="w-full h-auto rounded-xl border border-zinc-800" />
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---------- Scroll controls (fix "buttons doing nothing") ----------
+    function scrollToId(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      // For Safari quirks
+      setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+    }
+
+    document.getElementById("btnViewProjects")?.addEventListener("click", () => scrollToId("projects"));
+    document.getElementById("btnHiringFit")?.addEventListener("click", () => scrollToId("hiring"));
+
+    // ---------- PrimeOps modal content map ----------
+    const PRIMEOPS = {
+      P: { key:"P", label:"Purpose", body:"Entender o propósito do sistema e o “por quê” do problema antes de agir. Define objetivo, sucesso e limitações.", ask:"Qual é o objetivo real?", evidence:"O que é fato vs suposição?", guardrail:"O que não pode quebrar?" },
+      R: { key:"R", label:"Rules / Fundamentals", body:"Identificar as regras e fundamentos que governam o sistema (rede, SO, segurança, processo). Evita correções que só mascaram sintomas.", ask:"Qual regra está sendo violada?", evidence:"Quais sinais confirmam a causa?", guardrail:"Quais padrões devem ser mantidos?" },
+      I: { key:"I", label:"Impacts", body:"Medir impacto (risco, custo, disponibilidade, reputação). Ajuda a priorizar e decidir com base em trade-offs claros.", ask:"Quem/qual serviço é afetado?", evidence:"Qual a janela e severidade?", guardrail:"Qual risco é aceitável agora?" },
+      M: { key:"M", label:"Map / Connections", body:"Mapear dependências, fluxos e conexões (sistemas, integrações, rede, autenticação). Evita “conserto local” em problema sistêmico.", ask:"Onde começa e onde termina?", evidence:"Qual dependência falhou primeiro?", guardrail:"Qual elo é ponto único de falha?" },
+      E: { key:"E", label:"Execution (Controlled Change)", body:"Executar mudança controlada: pequeno passo, reversível, com validação. Reduz risco e acelera aprendizado real.", ask:"Qual é o menor teste seguro?", evidence:"Como validar rapidamente?", guardrail:"Qual o plano de rollback?" },
+      O: { key:"O", label:"Observability", body:"Instrumentar telemetria e sinais acionáveis (logs, métricas, traces, alertas). Sem observabilidade, não existe controle nem previsibilidade.", ask:"Qual sinal prova a melhora?", evidence:"Qual métrica confirma?", guardrail:"Como evitar regressão?" },
+      PS:{ key:"PS",label:"Padronizar & Sistematizar", body:"Transformar solução em padrão: runbook, checklist, automação e aprendizado organizacional. É aqui que escala e autoridade nascem.", ask:"O que vira template/runbook?", evidence:"Qual passo foi repetido?", guardrail:"Como garantir consistência?" }
+    };
+
+    const primeopsModal      = document.getElementById("primeopsModal");
+    const primeopsModalClose = document.getElementById("primeopsModalClose");
+    const primeopsKey        = document.getElementById("primeopsKey");
+    const primeopsLabel      = document.getElementById("primeopsLabel");
+    const primeopsBody       = document.getElementById("primeopsBody");
+    const primeopsAsk        = document.getElementById("primeopsAsk");
+    const primeopsEvidence   = document.getElementById("primeopsEvidence");
+    const primeopsGuardrail  = document.getElementById("primeopsGuardrail");
+
+    function updatePrimeopsContent(selected) {
+      const data = PRIMEOPS[selected] || PRIMEOPS.P;
+      primeopsKey.textContent       = data.key;
+      primeopsLabel.textContent     = data.label;
+      primeopsBody.textContent      = data.body;
+      primeopsAsk.textContent       = data.ask;
+      primeopsEvidence.textContent  = data.evidence;
+      primeopsGuardrail.textContent = data.guardrail;
+    }
+
+    function openPrimeopsModal(selected) {
+      updatePrimeopsContent(selected || "P");
+      primeopsModal.dataset.open = "true";
+      primeopsModalClose.focus();
+      document.body.style.overflow = "hidden";
+    }
+
+    function closePrimeopsModal() {
+      primeopsModal.dataset.open = "false";
+      document.body.style.overflow = "";
+    }
+
+    document.addEventListener("click", (e) => {
+      const trigger = e.target.closest("[data-primeops-open]");
+      if (!trigger) return;
+      e.preventDefault();
+      const key = trigger.getAttribute("data-primeops-open");
+      if (primeopsModal.dataset.open === "true") updatePrimeopsContent(key);
+      else openPrimeopsModal(key);
+    });
+
+    primeopsModalClose.addEventListener("click", closePrimeopsModal);
+    primeopsModal.addEventListener("click", (e) => { if (e.target === primeopsModal) closePrimeopsModal(); });
+
+    // ---------- Lightbox modal ----------
+    const imgModal      = document.getElementById("imgModal");
+    const imgModalClose = document.getElementById("imgModalClose");
+    const imgModalEl    = document.getElementById("imgModalEl");
+
+    function openImgModal(src) {
+      imgModalEl.src = src;
+      imgModal.dataset.open = "true";
+      imgModalClose.focus();
+      document.body.style.overflow = "hidden";
+    }
+    function closeImgModal() {
+      imgModal.dataset.open = "false";
+      imgModalEl.src = "";
+      document.body.style.overflow = "";
+    }
+
+    document.querySelectorAll("[data-img]").forEach((btn) => {
+      btn.addEventListener("click", () => openImgModal(btn.getAttribute("data-img")));
+    });
+
+    imgModalClose.addEventListener("click", closeImgModal);
+    imgModal.addEventListener("click", (e) => { if (e.target === imgModal) closeImgModal(); });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        if (primeopsModal.dataset.open === "true") closePrimeopsModal();
+        if (imgModal.dataset.open === "true") closeImgModal();
+      }
+    });
+
+    // ---------- Intersection Observer animations ----------
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.style.animationPlayState = "running";
+          observer.unobserve(entry.target);
+        }
+      }),
+      { threshold: 0.1 }
+    );
+
+    document.querySelectorAll(".animate-in").forEach((el) => {
+      el.style.animationPlayState = "paused";
+      observer.observe(el);
+    });
+  </script>
+
+</body>
+</html>
